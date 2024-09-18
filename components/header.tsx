@@ -30,7 +30,6 @@ export default function Header() {
                         </Button>
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Static Actions">
-                        <DropdownItem key="profile"><Link href="profile">Profile</Link></DropdownItem>
                         <DropdownItem key="settings"><Link href="appsettings">Settings</Link></DropdownItem>
                         <DropdownItem onClick={logoutUser} key="delete" className="text-danger" color="danger">
                             Logout
