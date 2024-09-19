@@ -26,14 +26,19 @@ export default function Settings() {
         e.preventDefault();
     }
 
-    function toggleMenu() {
-        setIsMenuOpen(true);
+    function openMenu() {
+        setIsMenuOpen(!isMenuOpen);
+    }
+
+    function closeMenu() {
+        setIsMenuOpen(!isMenuOpen)
     }
 
     return (
         <main className="bg-slate-50 w-full min-h-screen h-full pe-4">
+            <div onClick={closeMenu} className={isMenuOpen ? "transition-all w-full h-full fixed z-20 backdrop-blur-[10px] block" : "transition-all hidden w-full h-full fixed z-20 backdrop-blur-[5px]"}></div>
             <div className="flex relative h-full">
-                <div className={isMenuOpen ? "border-r-2 h-screen w-64 fixed lg:left-0 left-0 bg-slate-50 z-20" : "border-r-2 h-screen w-64 absolute lg:left-0 left-[-100%] bg-slate-50 z-20"}>
+                <div className={isMenuOpen ? "transition-all border-r-2 h-screen w-64 fixed lg:left-0 left-0 bg-slate-50 z-30" : "transition-all border-r-2 h-screen w-64 absolute lg:left-0 left-[-100%] bg-slate-50 z-20"}>
                     <Button size="sm" radius="none" className="absolute top-2 start-4">
                         <Link href="home" className="flex"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path></svg> Back</Link>
                     </Button>
@@ -46,7 +51,7 @@ export default function Settings() {
                 </div>
                 <div className="absolute lg:left-[16em] left-0">
                     <div className="flex py-4 ms-4">
-                        <i onClick={toggleMenu} className="ri-menu-line text-2xl me-4 cursor-pointer md:pt-1 lg:hidden block"></i>
+                        <i onClick={openMenu} className="ri-menu-line text-2xl me-4 cursor-pointer md:pt-1 lg:hidden block"></i>
                         <h1 className="md:text-4xl text-2xl font-semibold">Settings</h1>
                     </div>
 
@@ -139,7 +144,7 @@ export default function Settings() {
 
                     {/* delete account UI */}
 
-                    <Modal className="min-w-64" isOpen={isOpen} onOpenChange={onOpenChange}>
+                    <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
                         <ModalContent>
                             {(onClose) => (
                                 <>
@@ -164,6 +169,6 @@ export default function Settings() {
 
                 </div>
             </div>
-        </main>
+        </main >
     )
 }
