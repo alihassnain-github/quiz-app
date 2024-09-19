@@ -8,6 +8,7 @@ import Link from "next/link";
 
 export default function Settings() {
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<string>("edit-profile");
 
     const [isVisible, setIsVisible] = useState(false);
@@ -25,10 +26,14 @@ export default function Settings() {
         e.preventDefault();
     }
 
+    function toggleMenu() {
+        setIsMenuOpen(true);
+    }
+
     return (
         <main className="bg-slate-50 w-full min-h-screen h-full pe-4">
-            <div className="flex">
-                <div className="border-r-2 h-screen w-64 relative">
+            <div className="flex relative h-full">
+                <div className={isMenuOpen ? "border-r-2 h-screen w-64 fixed lg:left-0 left-0 bg-slate-50 z-20" : "border-r-2 h-screen w-64 absolute lg:left-0 left-[-100%] bg-slate-50 z-20"}>
                     <Button size="sm" radius="none" className="absolute top-2 start-4">
                         <Link href="home" className="flex"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path></svg> Back</Link>
                     </Button>
@@ -39,8 +44,11 @@ export default function Settings() {
                         <li onClick={onOpen} className="py-3 cursor-pointer hover:bg-[#F31260] hover:text-white text-[#F31260] ps-4 transition"><i className="text-xl me-2 ri-delete-bin-5-line"></i> Delete account</li>
                     </ul>
                 </div>
-                <div>
-                    <h1 className="sm:text-2xl md:text-4xl text-2xl font-semibold py-4 ms-4">Settings</h1>
+                <div className="absolute lg:left-[16em] left-0">
+                    <div className="flex py-4 ms-4">
+                        <i onClick={toggleMenu} className="ri-menu-line text-2xl me-4 cursor-pointer md:pt-1 lg:hidden block"></i>
+                        <h1 className="md:text-4xl text-2xl font-semibold">Settings</h1>
+                    </div>
 
                     {/* Edit profile UI */}
 
@@ -53,7 +61,7 @@ export default function Settings() {
                                     height={200}
                                     src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
                                     alt="NextUI Album Cover"
-                                    className="rounded-full border-2 ms-7"
+                                    className="rounded-full border-2 ms-7 z-10"
                                 />
                                 <label htmlFor="uploadImage" className="absolute top-[150px] start-[170px] z-10 rounded-full cursor-pointer grid place-items-center bg-blue-500 w-[40px] h-[40px]"><i className="ri-camera-line text-2xl text-white"></i></label>
                                 <input type="file" id="uploadImage" className="hidden" accept="image/*" onChange={(e) => setImage(e.target.value)} value={image} />
