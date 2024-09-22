@@ -1,36 +1,23 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut } from "firebase/auth";
 import { app } from "./firebaseconfig";
 
 const auth = getAuth(app);
 
 export function signupWithEmailPassword(email: string, password: string) {
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up 
-            const user = userCredential.user;
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
+    return createUserWithEmailAndPassword(auth, email, password);
 };
 
 export function loginWithEmailPassword(email: string, password: string) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
+    return signInWithEmailAndPassword(auth, email, password);
 };
 
 export function logout() {
-    signOut(auth).then(() => {
-
-    }).catch((error) => {
-
-    });
+    return signOut(auth);
 };
+
+export function sendEmail() {
+    const user = auth.currentUser;
+
+    if (user)
+        return sendEmailVerification(auth.currentUser);
+}

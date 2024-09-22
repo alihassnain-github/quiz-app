@@ -2,7 +2,7 @@
 
 import { Spinner } from "@nextui-org/react";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/firebase/firebaseconfig";
 import { useRouter } from "next/navigation";
 
@@ -27,11 +27,6 @@ export default function UserContextProvider({ children }: { children: ReactNode 
         const auth = getAuth(app);
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                sendEmailVerification(user)
-                    .then(() => {
-                        // Email verification sent!
-                        // ...
-                    });
 
                 const { email, uid, emailVerified } = user;
                 setUser({ email, uid });
