@@ -16,71 +16,59 @@ export default function Login() {
     const toggleVisibility = () => setIsVisible(!isVisible);
 
     const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const [generalError, setGeneralError] = useState("");
 
     function submitHandler(e: FormEvent) {
+
+        setEmailError("");
+        setPasswordError("");
+        setGeneralError("");
+
         e.preventDefault();
         setisLoading(true);
 
         loginWithEmailPassword(email, password)
             .then((userCredential) => {
                 setisLoading(false);
-                setEmailError("");
-                setGeneralError("");
             })
             .catch((error) => {
 
-                if (error.code === 'auth/invalid-email') {
-                    setEmailError('Invalid email address. Please enter a valid email.');
-                    setGeneralError('');
-                } else if (error.code === 'auth/invalid-credential') {
-                    setGeneralError('auth/invalid-credential');
-                    setEmailError('');
+                if (error.code === "auth/invalid-email") {
+                    setEmailError("Invalid email. Please enter a valid email.");
                 }
-                else if (error.code === 'auth/network-request-failed') {
-                    setGeneralError('auth/network-request-failed');
-                    setEmailError('');
+                else if (error.code === "auth/missing-password") {
+                    setPasswordError("Please enter your password.");
+                }
+                else if (error.code === "auth/invalid-credential") {
+                    setGeneralError("Invalid email or password.");
+                }
+                else if (error.code === "auth/network-request-failed") {
+                    setGeneralError("Network error. Please check your connection.");
                 }
                 else {
-                    setGeneralError('login-failed');
-                    setEmailError('');
+                    setGeneralError("Something went wrong. Please try agian later.");
                 }
 
                 setisLoading(false);
 
-                setTimeout(() => {
-                    setGeneralError('');
-                }, 5000);
+                if (generalError) {
+                    setTimeout(() => {
+                        setGeneralError('');
+                    }, 5000);
+                }
 
             });
 
-        setEmail("");
-        setPassword("");
     }
 
     return (
         <div className="h-screen w-full grid place-items-center p-4 relative">
             {
-                generalError === "auth/invalid-credential" && (
+                generalError && (
                     <div className="mx-4 flex items-end absolute z-20 border-2 border-danger-400 rounded px-4 py-3 top-4">
                         <i className="ri-error-warning-line me-3 text-xl text-danger-400"></i>
-                        <p>Invalid email or password.</p>
-                    </div>
-                )
-            }
-            {
-                generalError === "auth/network-request-failed" && (
-                    <div className="mx-4 flex items-end absolute z-20 border-2 border-danger-400 rounded px-4 py-3 top-4">
-                        <i className="ri-signal-wifi-error-fill me-3 text-xl text-danger-400"></i>
-                        <p>Network error. Please check your connection.</p>
-                    </div>
-                )
-            }
-            {
-                generalError === "login-failed" && (
-                    <div className="mx-4 flex items-end absolute z-20 border-2 border-danger-400 rounded px-4 py-3 top-4">
-                        <i className="ri-close-circle-line me-3 text-xl text-danger-400"></i>
-                        <p>Login failed. Please try again.</p>
+                        <p>{generalError}</p>
                     </div>
                 )
             }
@@ -108,6 +96,7 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
                     />
+                    <small className={passwordError ? "text-danger-400 ms-1" : "text-danger-400 ms-1 hidden"}>{passwordError}</small>
                     <p className="text-sm my-2 cursor-pointer hover:underline">forget password?</p>
                 </div>
 

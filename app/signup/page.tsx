@@ -40,7 +40,6 @@ export default function Signup() {
                 }
             })
             .catch((error) => {
-                console.log(error.code);
 
                 if (error.code === "auth/invalid-email") {
                     setEmailError("Invalid email. Please enter a valid email.");
@@ -66,10 +65,11 @@ export default function Signup() {
 
                 setisLoading(false);
 
-                setTimeout(() => {
-                    setGeneralError('');
-                }, 5000);
-
+                if (generalError) {
+                    setTimeout(() => {
+                        setGeneralError('');
+                    }, 5000);
+                }
             });
     }
 

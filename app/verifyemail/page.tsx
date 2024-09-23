@@ -18,7 +18,6 @@ export default function VerifyEmail() {
             setisLoading(false);
         })
             .catch((error) => {
-                console.log(error.code);
 
                 setGeneralError("Something went wrong. Please check your internet connection or try again.");
                 setisLoading(false);
