@@ -40,6 +40,8 @@ export default function Signup() {
                 }
             })
             .catch((error) => {
+                console.log(error.code);
+
                 if (error.code === "auth/invalid-email") {
                     setEmailError("Invalid email. Please enter a valid email.");
                 }
@@ -54,6 +56,9 @@ export default function Signup() {
                 }
                 else if (error.code === "auth/network-request-failed") {
                     setGeneralError("Network error. Please check your connection.");
+                }
+                else if (error.code === "auth/email-already-in-use") {
+                    setGeneralError("Email already in use. Please try another.");
                 }
                 else {
                     setGeneralError("Something went wrong please try again.");

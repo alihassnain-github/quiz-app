@@ -1,15 +1,44 @@
 "use client";
 
 import { userData } from "@/context/authcontext";
-import Image from "next/image";
 import { Button } from "@nextui-org/react";
+import { useState } from "react";
+import { sendEmail } from "@/firebase/firebaseauth";
 
 export default function VerifyEmail() {
 
+    const [isLoading, setisLoading] = useState(false);
+    const [generalError, setGeneralError] = useState("");
+    const [sendEmailCount, setSendEmailCount] = useState(0);
+    function resendEmail() {
+        setGeneralError("");
+        setisLoading(true);
+        sendEmail()?.then(() => {
+            setSendEmailCount(sendEmailCount + 1);
+            setisLoading(false);
+        })
+            .catch((error) => {
+                console.log(error.code);
+
+                setGeneralError("Something went wrong. Please check your internet connection or try again.");
+                setisLoading(false);
+                setTimeout(() => {
+                    setGeneralError('');
+                }, 5000);
+            })
+    }
     const { user } = userData()!;
 
     return (
-        <div className="w-full h-screen bg-slate-50 grid place-items-center px-4">
+        <div className="w-full h-screen bg-slate-50 grid place-items-center px-4 relative">
+            {
+                generalError && (
+                    <div className="mx-4 flex items-end absolute z-20 border-2 border-danger-400 rounded px-4 py-3 top-4">
+                        <i className="ri-error-warning-line me-3 text-xl text-danger-400"></i>
+                        <p>{generalError}</p>
+                    </div>
+                )
+            }
             <div className="border-2 rounded p-4 lg:w-1/3 md:w-1/2 w-full">
                 <svg fill="#F31260" className="block mx-auto" width="100px" height="100px" viewBox="0 0 512 512" id="_x30_1" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
@@ -24,9 +53,11 @@ export default function VerifyEmail() {
                 </svg>
                 <h1 className="text-center md:text-4xl text-2xl my-4">Email Confirmation</h1>
                 <p className="w-full text-center mx-auto">Almost there! We've sent a verification email to <span className="text-[#F31260]">{user?.email}</span>. You need to verify your email to proceed further.</p>
-                <Button size="sm" radius="full" className="block mx-auto mt-4 bg-[#F31260] text-white">
-                    Resend email
-                </Button>
+                <div className="flex justify-center">
+                    <Button onClick={resendEmail} isLoading={isLoading} size="sm" radius="full" className={sendEmailCount ? "bg-[#F31260] text-white hidden" : "text-center mt-4 bg-[#F31260] text-white"}>
+                        Resend email
+                    </Button>
+                </div>
             </div>
         </div>
     )
